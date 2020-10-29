@@ -25,7 +25,7 @@ class Application: Application() {
     }
 
     private val appModule = module {
-        single<NetworkApi> { NetworkApiImpl(ktorClient = KtorClient(getString(R.string.app_name))) }
+        single<NetworkApi> { NetworkApiImpl(KtorClient(getString(R.string.app_name))) } // TODO: Base URl
         single<LoginRepo> { LoginRepoImpl(get()) }
         viewModel { MainViewModel() }
     }

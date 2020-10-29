@@ -55,7 +55,7 @@ class KtorClient(private val baseUrl: String) {
                 decodeResponseBody(response)
             }
         } catch (ex: Exception) {
-            Action.Error(-2, ex)
+            Action.Error(ex)
         }
 
     // private suspend inline fun <reified> ¯\_(ツ)_/¯
@@ -65,10 +65,10 @@ class KtorClient(private val baseUrl: String) {
 
     private fun handleError(response: HttpResponse): Action.Error =
         when (response.status) {
-            HttpStatusCode.BadRequest -> Action.Error(exception = BadRequest())
-            HttpStatusCode.NotFound -> Action.Error(exception = NotFound())
-            HttpStatusCode.InternalServerError -> Action.Error(exception = InternalServerError())
-            else -> Action.Error(exception = Unknown())
+            HttpStatusCode.BadRequest -> Action.Error(BadRequest())
+            HttpStatusCode.NotFound -> Action.Error(NotFound())
+            HttpStatusCode.InternalServerError -> Action.Error(InternalServerError())
+            else -> Action.Error(Unknown())
         }
 
     private suspend fun postRequest(urlPath: String, bodyData: Any): HttpResponse =

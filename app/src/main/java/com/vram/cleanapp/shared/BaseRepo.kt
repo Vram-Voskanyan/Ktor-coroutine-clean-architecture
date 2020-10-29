@@ -11,7 +11,7 @@ open class BaseRepo {
         try {
             Action.Success(call())
         } catch (ex: Exception) {
-            Action.Error(-1, ex)
+            Action.Error(ex)
         }
     }
 

@@ -3,7 +3,7 @@ package com.vram.cleanapp.shared.data
 sealed class Action<out R> {
 
     data class Success<out T>(val data: T) : Action<T>()
-    data class Error(val errorCode: Int = -1, val exception: Exception) : Action<Nothing>()
+    data class Error(val exception: Exception, val extraErrorCode: Int = -1) : Action<Nothing>()
 
     override fun toString(): String {
         return when (this) {

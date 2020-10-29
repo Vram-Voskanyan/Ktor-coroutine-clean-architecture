@@ -20,12 +20,12 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initObservers() {
-//        viewModel
+
     }
 
     private fun initViews() {
         bLogin.setOnClickListener {
-
+            viewModel.login(etUsername.text.toString(), etPassword.text.toString())
         }
     }
 }
