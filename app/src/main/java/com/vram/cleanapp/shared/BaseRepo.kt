@@ -1,6 +1,6 @@
-package com.vram.cleanapp.base
+package com.vram.cleanapp.shared
 
-import com.vram.cleanapp.base.data.Action
+import com.vram.cleanapp.shared.data.Action
 import kotlinx.coroutines.coroutineScope
 
 import java.lang.Exception

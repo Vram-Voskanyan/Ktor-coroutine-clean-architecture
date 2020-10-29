@@ -1,18 +1,15 @@
 package com.vram.cleanapp.network
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.vart.madapplication.core.data.Action
-import com.vart.madapplication.delivery.activeorders.data.ResponseResult
+import com.vram.cleanapp.shared.data.Action
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.features.*
 import io.ktor.client.features.json.*
+import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import java.lang.reflect.Type
 
 class BadRequest : Exception()
 class InternalServerError : Exception()
@@ -22,19 +19,20 @@ class Unknown : Exception()
 // can be `object` instead of class
 class KtorClient(private val baseUrl: String) {
 
-    suspend fun <R> post(url: String, body: Any): Action<R> = safeApiCall(object : TypeToken<ResponseResult<R>>() {}.type) {
+    suspend fun <R> post(url: String, body: Any): Action<R> = safeApiCall {
         postRequest(url, body)
     }
 
-    suspend fun <R> get(returnBodyType: Type, urlPath: String): Action<R> = safeApiCall(getTypeToken(returnBodyType)) {
+    suspend fun <R> get(urlPath: String): Action<R> = safeApiCall {
         getRequest(urlPath)
     }
 
-    fun addHeader(key: String, value: String) {
+    // we add new header for `ALL` calls
+    fun addDefaultHeader(key: String, value: String) {
         defaultHeaders[key] = value
     }
 
-    fun removeHeader(key: String) {
+    fun removeDefaultHeader(key: String) {
         defaultHeaders.remove(key)
     }
 
@@ -48,35 +46,30 @@ class KtorClient(private val baseUrl: String) {
             configureDefaultRequest()
         }
 
-    private suspend fun <R> safeApiCall(type: Type, call: suspend () -> HttpResponse): Action<R> =
+    private suspend fun <R> safeApiCall(call: suspend () -> HttpResponse): Action<R> =
         try {
             val response = call()
             if (!response.status.isSuccess()) {
                 handleError(response)
             } else {
-                decodeResponseBody(type, response)
+                decodeResponseBody(response)
             }
         } catch (ex: Exception) {
             Action.Error(-2, ex)
         }
 
     // private suspend inline fun <reified> ¯\_(ツ)_/¯
-    private suspend fun <R> decodeResponseBody(type: Type, httpResponse: HttpResponse): Action<R> {
-        // TODO: need to change to byteArray
-//        val typeR: Type = object : TypeToken<ResponseResult<R>>() {}.type
-        val data = httpResponse.readText()
-        return Action.Success(Gson().fromJson<ResponseResult<R>>(data, type).result)
+    private suspend inline fun <reified R> decodeResponseBody(httpResponse: HttpResponse): R {
+        return Action.Success(TODO()) as R
     }
 
     private fun handleError(response: HttpResponse): Action.Error =
         when (response.status) {
-            HttpStatusCode.BadRequest -> Action.Error(403, BadRequest())
-            HttpStatusCode.NotFound -> Action.Error(404, NotFound())
-            HttpStatusCode.InternalServerError -> Action.Error(501, InternalServerError())
-            else -> Action.Error(-1, Unknown())
+            HttpStatusCode.BadRequest -> Action.Error(exception = BadRequest())
+            HttpStatusCode.NotFound -> Action.Error(exception = NotFound())
+            HttpStatusCode.InternalServerError -> Action.Error(exception = InternalServerError())
+            else -> Action.Error(exception = Unknown())
         }
-
-    private fun getTypeToken(type: Type) = TypeToken.getParameterized(ResponseResult::class.java, type).type
 
     private suspend fun postRequest(urlPath: String, bodyData: Any): HttpResponse =
         client.post {
@@ -90,10 +83,7 @@ class KtorClient(private val baseUrl: String) {
 
     private fun HttpClientConfig<*>.configureJson() {
         install(JsonFeature) {
-            // need to have parser with reflection, otherwise it will be painful
-            // to support generic responses: BaseResponse<T>
-            // serializer = KotlinxSerializer()
-            serializer = GsonSerializer()
+             serializer = KotlinxSerializer()
         }
     }
 
@@ -105,12 +95,17 @@ class KtorClient(private val baseUrl: String) {
     }
 
     private fun HttpClientConfig<*>.configureDefaultRequest() {
-        addHeader("Content-Type", "application/json")
+        // todo: need to move this header set on app init.
+        addDefaultHeader("Content-Type", "application/json")
         defaultRequest {
+            // mostly base urls structure are: <HOST>/<API_VERSION>/?<ADDITIONAL_PATH>
+            // so for base url we are using https://example.com/api/v3/[endpoint]
             url.takeFrom(URLBuilder().takeFrom(baseUrl).apply {
                 encodedPath += url.encodedPath
             })
             headers.clear()
+            // list of default headers, for example in our case it will be:
+            // Content-Type, user authentication token.
             defaultHeaders.forEach {
                 headers.append(it.key, it.value)
             }

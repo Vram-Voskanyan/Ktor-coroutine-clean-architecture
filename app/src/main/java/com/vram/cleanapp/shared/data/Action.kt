@@ -1,4 +1,4 @@
-package com.vram.cleanapp.base.data
+package com.vram.cleanapp.shared.data
 
 sealed class Action<out R> {
 

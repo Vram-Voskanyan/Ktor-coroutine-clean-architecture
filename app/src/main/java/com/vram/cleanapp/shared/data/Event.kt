@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.vram.cleanapp.base.data
+package com.vram.cleanapp.shared.data
 
 import androidx.lifecycle.Observer
 

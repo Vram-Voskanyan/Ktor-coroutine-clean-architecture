@@ -1,6 +1,11 @@
 package com.vram.cleanapp
 
 import android.app.Application
+import com.vram.cleanapp.network.KtorClient
+import com.vram.cleanapp.network.NetworkApi
+import com.vram.cleanapp.network.NetworkApiImpl
+import com.vram.cleanapp.repo.LoginRepo
+import com.vram.cleanapp.repo.LoginRepoImpl
 import com.vram.cleanapp.view.MainViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -20,7 +25,9 @@ class Application: Application() {
     }
 
     private val appModule = module {
-//        viewModel { MainViewModel() } // TODO: init repos
+        single<NetworkApi> { NetworkApiImpl(ktorClient = KtorClient(getString(R.string.app_name))) }
+        single<LoginRepo> { LoginRepoImpl(get()) }
+        viewModel { MainViewModel() }
     }
 
 }

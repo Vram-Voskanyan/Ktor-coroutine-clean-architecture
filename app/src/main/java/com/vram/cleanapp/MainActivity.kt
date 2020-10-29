@@ -1,12 +1,16 @@
 package com.vram.cleanapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.vram.cleanapp.shared.android.BaseActivity
+import com.vram.cleanapp.shared.android.BaseViewModel
+import com.vram.cleanapp.view.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
-//    val viewModel by viewModel()
+    private val viewModel: MainViewModel by viewModel()
+    override val baseViewModel: BaseViewModel = viewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -14,8 +18,6 @@ class MainActivity : AppCompatActivity() {
         initViews()
         initObservers()
     }
-
-
 
     private fun initObservers() {
 //        viewModel
