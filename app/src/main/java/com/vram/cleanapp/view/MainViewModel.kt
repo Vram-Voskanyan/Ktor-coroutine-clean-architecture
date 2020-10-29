@@ -1,10 +1,11 @@
 package com.vram.cleanapp.view
 
-import com.vram.cleanapp.shared.android.BaseViewModel
-import com.vram.cleanapp.shared.android.runOnBackground
+import com.vram.cleanapp.domain.LoginUseCase
+import com.vram.cleanapp.view.core.BaseViewModel
+import com.vram.cleanapp.shared.runOnBackground
 import kotlinx.coroutines.delay
 
-class MainViewModel() : BaseViewModel() {
+class MainViewModel(val loginUseCase: LoginUseCase) : BaseViewModel() {
 
 
     fun login(userName: String?, password: String?) = runOnBackground {

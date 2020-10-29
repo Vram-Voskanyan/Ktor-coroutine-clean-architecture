@@ -1,4 +1,4 @@
-package com.vram.cleanapp.shared.android
+package com.vram.cleanapp.view.core
 
 import android.os.Bundle
 import android.view.View
@@ -26,13 +26,12 @@ abstract class BaseActivity : AppCompatActivity() {
         baseViewModel.viewState.observe(this, {
             changeLoadingState(it ?: throw IllegalArgumentException("ViewState can't be null"))
         })
-        // TODO -> show loading, hide loading
     }
 
     private fun changeLoadingState(viewState: ViewState) {
-        when(viewState) {
+        when (viewState) {
             ViewState.DATA_LOADED -> progressBarView.visibility = View.INVISIBLE
-            ViewState.LOADING ->  progressBarView.visibility = View.VISIBLE
+            ViewState.LOADING -> progressBarView.visibility = View.VISIBLE
         }
     }
 

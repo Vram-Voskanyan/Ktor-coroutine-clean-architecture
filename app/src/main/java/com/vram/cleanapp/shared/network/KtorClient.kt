@@ -1,4 +1,4 @@
-package com.vram.cleanapp.network
+package com.vram.cleanapp.shared.network
 
 import com.vram.cleanapp.shared.data.Action
 import io.ktor.client.*

@@ -1,4 +1,6 @@
-package com.vram.cleanapp.network
+package com.vram.cleanapp.data.service
+
+import com.vram.cleanapp.shared.network.KtorClient
 
 interface NetworkApi {
     fun setToken(token: String)

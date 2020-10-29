@@ -1,6 +1,6 @@
-package com.vram.cleanapp.repo
+package com.vram.cleanapp.data.repo
 
-import com.vram.cleanapp.network.NetworkApi
+import com.vram.cleanapp.data.service.NetworkApi
 import com.vram.cleanapp.shared.BaseRepo
 
 interface LoginRepo {

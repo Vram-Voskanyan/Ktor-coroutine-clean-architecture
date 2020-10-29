@@ -1,4 +1,4 @@
-package com.vram.cleanapp.shared.android
+package com.vram.cleanapp.view.core
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
