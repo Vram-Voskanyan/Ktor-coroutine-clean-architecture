@@ -11,16 +11,22 @@ import io.ktor.client.features.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 
 // can be `object` instead of class
+@InternalSerializationApi
 class KtorClient(private val baseUrl: String) {
 
-    suspend fun <R> post(url: String, body: Any): Action<R> = safeApiCall {
-        postRequest(url, body)
-    }
-
-    suspend fun <R> get(urlPath: String): Action<R> = safeApiCall {
-        getRequest(urlPath)
+    // suspend inline fun <reified> ¯\_(ツ)_/¯ Keyword hell.
+    @Suppress("NON_PUBLIC_CALL_FROM_PUBLIC_INLINE") // TODO: deep dive on this
+    suspend inline fun <reified R : Any> get(urlPath: String): R {
+        val response = client.get<HttpResponse> { url { path(urlPath) } }
+        if (!response.status.isSuccess()) {
+            handleError(response)
+        }
+        return Json.decodeFromString(R::class.serializer(), response.readText())
     }
 
     // we add new header for `ALL` calls
@@ -42,30 +48,13 @@ class KtorClient(private val baseUrl: String) {
             configureDefaultRequest()
         }
 
-    private suspend fun <R> safeApiCall(call: suspend () -> HttpResponse): Action<R> =
-        try {
-            val response = call()
-            if (!response.status.isSuccess()) {
-                handleError(response)
-            } else {
-                decodeResponseBody(response)
-            }
-        } catch (ex: Exception) {
-            Action.Error(ex)
-        }
-
-    // private suspend inline fun <reified> ¯\_(ツ)_/¯
-    private suspend inline fun <reified R> decodeResponseBody(httpResponse: HttpResponse): R {
-        return Action.Success(TODO()) as R
-    }
-
     private fun handleError(response: HttpResponse): Action.Error =
         when (response.status) {
-            // TODO: throw?
-            HttpStatusCode.BadRequest -> Action.Error(BadRequest())
-            HttpStatusCode.NotFound -> Action.Error(NoInternet())
-            HttpStatusCode.InternalServerError -> Action.Error(InternalServerError())
-            else -> Action.Error(Unknown())
+            // TODO test no_internet, 404, 500 error codes.
+            HttpStatusCode.BadRequest -> throw BadRequest()
+            HttpStatusCode.NotFound -> throw NoInternet()
+            HttpStatusCode.InternalServerError -> throw InternalServerError()
+            else -> throw Unknown()
         }
 
     private suspend fun postRequest(urlPath: String, bodyData: Any): HttpResponse =
@@ -76,11 +65,12 @@ class KtorClient(private val baseUrl: String) {
             body = bodyData
         }
 
-    private suspend fun getRequest(urlPath: String): HttpResponse = client.get { url { path(urlPath) } }
+    private suspend fun getRequest(urlPath: String): HttpResponse =
+        client.get { url { path(urlPath) } }
 
     private fun HttpClientConfig<*>.configureJson() {
         install(JsonFeature) {
-             serializer = KotlinxSerializer()
+            serializer = KotlinxSerializer()
         }
     }
 

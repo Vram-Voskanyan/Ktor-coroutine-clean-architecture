@@ -9,6 +9,7 @@ import com.vram.cleanapp.domain.common.data.BaseException
 import com.vram.cleanapp.domain.common.onDefaultAsync
 import com.vram.cleanapp.domain.common.onIOAsync
 import com.vram.cleanapp.domain.repo.LoginRepo
+import kotlinx.coroutines.awaitAll
 
 interface LoginUseCase {
     suspend fun login(email: String?, password: String?): Action<UserToken>
@@ -22,12 +23,11 @@ class LoginUseCaseImpl(
     override suspend fun login(email: String?, password: String?): Action<UserToken> = safeCall {
         val userNameCheckResult = onIOAsync { checkValidEmail(email) }
         val passwordCheckResult = onDefaultAsync { validatePassword(password) }
-        userNameCheckResult.await()
-        passwordCheckResult.await()
+        awaitAll(userNameCheckResult, passwordCheckResult)
         TODO()
     }
 
-    private fun checkValidEmail(email: String?) {
+    private suspend fun checkValidEmail(email: String?) {
         val nonNullEmail = localEmailValidation(email)
         networkEmailValidation(nonNullEmail)
     }
@@ -38,7 +38,7 @@ class LoginUseCaseImpl(
         return email
     }
 
-    private fun networkEmailValidation(email: String) {
+    private suspend fun networkEmailValidation(email: String) {
         loginRepo.isEmailExist(email)
     }
 

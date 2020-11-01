@@ -11,12 +11,14 @@ import com.vram.cleanapp.domain.usecase.LoginUseCaseImpl
 import com.vram.cleanapp.domain.repo.LoginRepo
 import com.vram.cleanapp.domain.repo.ValidationRepo
 import com.vram.cleanapp.view.MainViewModel
+import kotlinx.serialization.InternalSerializationApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
+@InternalSerializationApi
 class Application : Application() {
 
     override fun onCreate() {
@@ -29,7 +31,7 @@ class Application : Application() {
     }
 
     private val appModule = module {
-        single<NetworkApi> { NetworkApiImpl(KtorClient(getString(R.string.app_name))) } // TODO: Base URl
+        single<NetworkApi> { NetworkApiImpl(KtorClient(getString(R.string.base_url))) } // TODO: Base URl
 
         // Repo
         single<LoginRepo> { LoginRepoImpl(get()) }

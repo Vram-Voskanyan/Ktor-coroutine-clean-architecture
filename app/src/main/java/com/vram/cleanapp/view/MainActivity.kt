@@ -20,7 +20,9 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initObservers() {
-
+        viewModel.onEmailError.observe(this, {
+            etEmail.error = "Change Email with: vram.arm@gmail.com"
+        })
     }
 
     private fun initViews() {
