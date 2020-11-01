@@ -1,5 +1,6 @@
-package com.vram.cleanapp.shared.data
+package com.vram.cleanapp.domain.common.data
 
+// TODO: change name to Result?
 sealed class Action<out R> {
 
     data class Success<out T>(val data: T) : Action<T>()

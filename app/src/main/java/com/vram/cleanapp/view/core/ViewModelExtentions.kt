@@ -1,8 +1,10 @@
-package com.vram.cleanapp.shared
+package com.vram.cleanapp.view.core
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 // Wrapped for Not testing purposes. For unit test we can change Dispatchers work making it synchronise:
 // For Unit test:
@@ -15,6 +17,7 @@ fun ViewModel.runOnBackground(block: suspend () -> Unit): Job =
         block()
     }
 
-fun ViewModel.runOnIO(block: suspend () -> Unit): Job = viewModelScope.launch(Dispatchers.IO) {
-    block()
-}
+fun ViewModel.runOnIO(block: suspend () -> Unit): Job =
+    viewModelScope.launch(Dispatchers.IO) {
+        block()
+    }

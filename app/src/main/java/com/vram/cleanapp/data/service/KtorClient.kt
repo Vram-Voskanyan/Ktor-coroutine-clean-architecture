@@ -1,6 +1,7 @@
-package com.vram.cleanapp.shared.network
+package com.vram.cleanapp.data.service
 
-import com.vram.cleanapp.shared.data.Action
+import com.vram.cleanapp.domain.common.data.Action
+import com.vram.cleanapp.domain.common.data.*
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.features.*
@@ -10,11 +11,6 @@ import io.ktor.client.features.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-
-class BadRequest : Exception()
-class InternalServerError : Exception()
-class NotFound : Exception()
-class Unknown : Exception()
 
 // can be `object` instead of class
 class KtorClient(private val baseUrl: String) {
@@ -65,8 +61,9 @@ class KtorClient(private val baseUrl: String) {
 
     private fun handleError(response: HttpResponse): Action.Error =
         when (response.status) {
+            // TODO: throw?
             HttpStatusCode.BadRequest -> Action.Error(BadRequest())
-            HttpStatusCode.NotFound -> Action.Error(NotFound())
+            HttpStatusCode.NotFound -> Action.Error(NoInternet())
             HttpStatusCode.InternalServerError -> Action.Error(InternalServerError())
             else -> Action.Error(Unknown())
         }

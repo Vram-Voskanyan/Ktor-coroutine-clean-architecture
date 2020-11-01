@@ -3,7 +3,6 @@ package com.vram.cleanapp.view.core
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.vram.cleanapp.shared.data.EventObserver
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.IllegalArgumentException
 

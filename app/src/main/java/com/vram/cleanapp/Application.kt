@@ -1,13 +1,15 @@
 package com.vram.cleanapp
 
 import android.app.Application
-import com.vram.cleanapp.shared.network.KtorClient
+import com.vram.cleanapp.data.service.KtorClient
 import com.vram.cleanapp.data.service.NetworkApi
 import com.vram.cleanapp.data.service.NetworkApiImpl
-import com.vram.cleanapp.data.repo.LoginRepo
 import com.vram.cleanapp.data.repo.LoginRepoImpl
-import com.vram.cleanapp.domain.LoginUseCase
-import com.vram.cleanapp.domain.LoginUseCaseImpl
+import com.vram.cleanapp.data.repo.ValidationRepoImpl
+import com.vram.cleanapp.domain.usecase.LoginUseCase
+import com.vram.cleanapp.domain.usecase.LoginUseCaseImpl
+import com.vram.cleanapp.domain.repo.LoginRepo
+import com.vram.cleanapp.domain.repo.ValidationRepo
 import com.vram.cleanapp.view.MainViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -29,9 +31,14 @@ class Application : Application() {
     private val appModule = module {
         single<NetworkApi> { NetworkApiImpl(KtorClient(getString(R.string.app_name))) } // TODO: Base URl
 
-        single<LoginUseCase> { LoginUseCaseImpl() }
+        // Repo
         single<LoginRepo> { LoginRepoImpl(get()) }
+        single<ValidationRepo> { ValidationRepoImpl() }
 
+        // UseCase
+        single<LoginUseCase> { LoginUseCaseImpl(get(), get()) }
+
+        // ViewModel
         viewModel { MainViewModel(get()) }
     }
 

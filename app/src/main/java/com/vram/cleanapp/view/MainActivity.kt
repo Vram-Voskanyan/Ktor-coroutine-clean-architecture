@@ -25,7 +25,7 @@ class MainActivity : BaseActivity() {
 
     private fun initViews() {
         bLogin.setOnClickListener {
-            viewModel.login(etUsername.text.toString(), etPassword.text.toString())
+            viewModel.login(etEmail.text.toString(), etPassword.text.toString())
         }
     }
 }
