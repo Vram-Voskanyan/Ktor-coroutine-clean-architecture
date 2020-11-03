@@ -1,4 +1,4 @@
-package com.vram.cleanapp.data.service
+package com.vram.cleanapp.data.service.network
 
 import com.vram.cleanapp.domain.common.data.Action
 import com.vram.cleanapp.domain.common.data.*
@@ -52,6 +52,7 @@ class KtorClient(private val baseUrl: String) {
         when (response.status) {
             // TODO test no_internet, 404, 500 error codes.
             HttpStatusCode.BadRequest -> throw BadRequest()
+            HttpStatusCode.Unauthorized -> throw Unauthorized()
             HttpStatusCode.NotFound -> throw NoInternet()
             HttpStatusCode.InternalServerError -> throw InternalServerError()
             else -> throw Unknown()

@@ -19,10 +19,9 @@ class MainViewModel(private val loginUseCase: LoginUseCase) : BaseViewModel() {
 
     fun login(email: String?, password: String?) = runOnBackground {
         startLoading()
-        delay(1000) // TODO: REMOVE.
         when (val response = loginUseCase.login(email, password)) {
             is Action.Success -> {
-                TODO()
+                showSuccess("Token: ${response.data.token}")
                 // TODO set token
                 // TODO get profile live data
                 // TODO get notes list.

@@ -21,15 +21,15 @@ class LoginUseCaseImpl(
 ) : LoginUseCase, BaseUseCase() {
 
     override suspend fun login(email: String?, password: String?): Action<UserToken> = safeCall {
-        val userNameCheckResult = onIOAsync { checkValidEmail(email) }
-        val passwordCheckResult = onDefaultAsync { validatePassword(password) }
-        awaitAll(userNameCheckResult, passwordCheckResult)
-        TODO()
+        val nonNullUserName = onIOAsync { checkValidEmail(email) }
+        val nonNullPassword = onDefaultAsync { validatePassword(password) }
+        loginRepo.login(nonNullUserName.await(), nonNullPassword.await())
     }
 
-    private suspend fun checkValidEmail(email: String?) {
+    private suspend fun checkValidEmail(email: String?): String {
         val nonNullEmail = localEmailValidation(email)
         networkEmailValidation(nonNullEmail)
+        return nonNullEmail
     }
 
     private fun localEmailValidation(email: String?): String {
@@ -39,13 +39,14 @@ class LoginUseCaseImpl(
     }
 
     private suspend fun networkEmailValidation(email: String) {
-        loginRepo.isEmailExist(email)
+        if (!loginRepo.isEmailExist(email)) throw BaseException(LoginErrorTypes.NO_SUCH_USERNAME.id)
     }
 
-    private fun validatePassword(password: String?) {
+    private fun validatePassword(password: String?): String {
         if (password.isNullOrEmpty()) throw BaseException(LoginErrorTypes.EMPTY_PASSWORD.id)
         // NO need on Login call. this is just example.
         //if (!validationRepo.isValidUserPassword(password)) throw BaseException(LoginErrorTypes.INVALID_PASSWORD.id)
+        return password
     }
 
 }

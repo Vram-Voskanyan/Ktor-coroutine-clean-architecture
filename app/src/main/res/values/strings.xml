@@ -11,6 +11,7 @@
     <string name="email_exist_url">01f3c142-ff9d-4925-8298-1132e6d740df</string>
     <string name="email_not_exist_url">f8cebfe2-036f-4845-8b77-7271bd87a6d5</string>
     <string name="email_not_exist_404_url">670a18a8-407d-43e2-a1bf-4c914920cabe</string>
+    <string name="invalid_credentials">8caca343-5edf-4764-a424-5646bd017057</string>
 
     <string name="get_user_token_url">67711067-83dd-481c-9ccd-403c416dc36c</string>
 </resources>

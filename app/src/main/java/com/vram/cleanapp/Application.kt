@@ -1,9 +1,9 @@
 package com.vram.cleanapp
 
 import android.app.Application
-import com.vram.cleanapp.data.service.KtorClient
-import com.vram.cleanapp.data.service.NetworkApi
-import com.vram.cleanapp.data.service.NetworkApiImpl
+import com.vram.cleanapp.data.service.network.KtorClient
+import com.vram.cleanapp.data.service.network.NetworkApi
+import com.vram.cleanapp.data.service.network.NetworkApiImpl
 import com.vram.cleanapp.data.repo.LoginRepoImpl
 import com.vram.cleanapp.data.repo.ValidationRepoImpl
 import com.vram.cleanapp.domain.usecase.LoginUseCase
