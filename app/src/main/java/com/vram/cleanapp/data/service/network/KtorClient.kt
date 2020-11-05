@@ -1,6 +1,5 @@
 package com.vram.cleanapp.data.service.network
 
-import com.vram.cleanapp.domain.common.data.Action
 import com.vram.cleanapp.domain.common.data.*
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -14,6 +13,7 @@ import io.ktor.http.*
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
+import java.nio.channels.UnresolvedAddressException
 
 // can be `object` instead of class
 @InternalSerializationApi
@@ -21,12 +21,14 @@ class KtorClient(private val baseUrl: String) {
 
     // suspend inline fun <reified> ¯\_(ツ)_/¯ Keyword hell.
     @Suppress("NON_PUBLIC_CALL_FROM_PUBLIC_INLINE") // TODO: deep dive on this
-    suspend inline fun <reified R : Any> get(urlPath: String): R {
+    suspend inline fun <reified R : Any> get(urlPath: String): R = try {
         val response = client.get<HttpResponse> { url { path(urlPath) } }
         if (!response.status.isSuccess()) {
             handleError(response)
         }
-        return Json.decodeFromString(R::class.serializer(), response.readText())
+        Json.decodeFromString(R::class.serializer(), response.readText())
+    } catch (ex: UnresolvedAddressException) {
+        throw NoInternet()
     }
 
     // we add new header for `ALL` calls
@@ -48,15 +50,15 @@ class KtorClient(private val baseUrl: String) {
             configureDefaultRequest()
         }
 
-    private fun handleError(response: HttpResponse): Action.Error =
+    private fun handleError(response: HttpResponse) {
         when (response.status) {
             // TODO test no_internet, 404, 500 error codes.
             HttpStatusCode.BadRequest -> throw BadRequest()
             HttpStatusCode.Unauthorized -> throw Unauthorized()
-            HttpStatusCode.NotFound -> throw NoInternet()
             HttpStatusCode.InternalServerError -> throw InternalServerError()
             else -> throw Unknown()
         }
+    }
 
     private suspend fun postRequest(urlPath: String, bodyData: Any): HttpResponse =
         client.post {

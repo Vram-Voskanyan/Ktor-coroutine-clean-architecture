@@ -16,6 +16,7 @@ abstract class BaseViewModel : ViewModel() {
             putIfAbsent(BAD_REQUEST) { showError("Client side issue") }
             putIfAbsent(INTERNAL_SERVER_ERROR) { showError("Server issue") }
             putIfAbsent(NO_INTERNET) { showError("Please check Network connection") }
+            putIfAbsent(UNAUTHORIZED) { showError("Request is Unauthorized") }
         }
 
     // DATA_LOADED, LOADING

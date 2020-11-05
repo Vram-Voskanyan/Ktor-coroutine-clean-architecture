@@ -23,6 +23,9 @@ class MainActivity : BaseActivity() {
         viewModel.onEmailError.observe(this, {
             etEmail.error = "Change Email with: vram.arm@gmail.com"
         })
+        viewModel.onPasswordError.observe(this, {
+            etPassword.error = "Psss~~\nChange it with: 1111"
+        })
     }
 
     private fun initViews() {

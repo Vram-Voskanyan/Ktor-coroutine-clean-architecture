@@ -18,11 +18,11 @@ interface NetworkApi {
 class NetworkApiImpl(private val ktorClient: KtorClient) : NetworkApi {
 
     override suspend fun setToken(token: String) {
-        TODO("Not yet implemented")
+        ktorClient.addDefaultHeader("Authorization", "Basic $token")
     }
 
     override suspend fun removeToken() {
-        TODO("Not yet implemented")
+        ktorClient.removeDefaultHeader("Authorization")
     }
 
     override suspend fun isEmailExist(email: String): EmailCheckerModel {

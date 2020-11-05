@@ -5,11 +5,15 @@ import com.vram.cleanapp.data.service.network.KtorClient
 import com.vram.cleanapp.data.service.network.NetworkApi
 import com.vram.cleanapp.data.service.network.NetworkApiImpl
 import com.vram.cleanapp.data.repo.LoginRepoImpl
+import com.vram.cleanapp.data.repo.UserRepoImpl
 import com.vram.cleanapp.data.repo.ValidationRepoImpl
 import com.vram.cleanapp.domain.usecase.LoginUseCase
 import com.vram.cleanapp.domain.usecase.LoginUseCaseImpl
 import com.vram.cleanapp.domain.repo.LoginRepo
+import com.vram.cleanapp.domain.repo.UserRepo
 import com.vram.cleanapp.domain.repo.ValidationRepo
+import com.vram.cleanapp.domain.usecase.UserUseCase
+import com.vram.cleanapp.domain.usecase.UserUseCaseImpl
 import com.vram.cleanapp.view.MainViewModel
 import kotlinx.serialization.InternalSerializationApi
 import org.koin.android.ext.koin.androidContext
@@ -35,13 +39,15 @@ class Application : Application() {
 
         // Repo
         single<LoginRepo> { LoginRepoImpl(get()) }
+        single<UserRepo> { UserRepoImpl(get()) }
         single<ValidationRepo> { ValidationRepoImpl() }
 
         // UseCase
-        single<LoginUseCase> { LoginUseCaseImpl(get(), get()) }
+        single<LoginUseCase> { LoginUseCaseImpl(get(), get(), get()) }
+        single<UserUseCase> { UserUseCaseImpl(get()) }
 
         // ViewModel
-        viewModel { MainViewModel(get()) }
+        viewModel { MainViewModel(get(), get()) }
     }
 
 }
