@@ -18,7 +18,7 @@ class Application: Application() {
             modules(appModule)
         }
     }
-
+//
     private val appModule = module {
 //        viewModel { MainViewModel() } // TODO: init repos
     }
