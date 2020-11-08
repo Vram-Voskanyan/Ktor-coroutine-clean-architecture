@@ -1,18 +1,13 @@
-package com.vram.cleanapp.data.service.network
+package com.vram.cleanapp.data.network
 
-import com.vram.cleanapp.data.service.network.model.EmailCheckerModel
-import com.vram.cleanapp.data.service.network.model.UserTokenModel
+import com.vram.cleanapp.EMAIL_EXIST_URL
+import com.vram.cleanapp.EMAIL_NOT_EXIST_URL
+import com.vram.cleanapp.GET_USER_TOKEN_URL
+import com.vram.cleanapp.INVALID_CREDENTIALS
+import com.vram.cleanapp.data.model.EmailCheckerModel
+import com.vram.cleanapp.data.model.UserTokenModel
+import com.vram.cleanapp.service.network.KtorClient
 import kotlinx.serialization.InternalSerializationApi
-
-// TODO: need to move to Domain
-interface NetworkApi {
-    suspend fun setToken(token: String)
-    suspend fun removeToken()
-    suspend fun isEmailExist(email: String): EmailCheckerModel
-    suspend fun login(email: String, password: String): UserTokenModel
-    suspend fun userInfo()
-    suspend fun userList()
-}
 
 @InternalSerializationApi
 class NetworkApiImpl(private val ktorClient: KtorClient) : NetworkApi {
@@ -28,9 +23,9 @@ class NetworkApiImpl(private val ktorClient: KtorClient) : NetworkApi {
     override suspend fun isEmailExist(email: String): EmailCheckerModel {
         // THIS IS CALL IMITATION
         val result = if (email != "vram.arm@gmail.com") {
-            ktorClient.get<EmailCheckerModel>("f8cebfe2-036f-4845-8b77-7271bd87a6d5")
+            ktorClient.get<EmailCheckerModel>(EMAIL_NOT_EXIST_URL)
         } else {
-            ktorClient.get("01f3c142-ff9d-4925-8298-1132e6d740df")
+            ktorClient.get(EMAIL_EXIST_URL)
         }
         return result
     }
@@ -38,10 +33,9 @@ class NetworkApiImpl(private val ktorClient: KtorClient) : NetworkApi {
     override suspend fun login(email: String, password: String): UserTokenModel {
         // THIS IS CALL IMITATION
         val result = if (password == "1111") {
-            ktorClient.get("67711067-83dd-481c-9ccd-403c416dc36c")
+            ktorClient.get(GET_USER_TOKEN_URL)
         } else {
-            // todo: handle from error
-            ktorClient.get<UserTokenModel>("8caca343-5edf-4764-a424-5646bd017057")
+            ktorClient.get<UserTokenModel>(INVALID_CREDENTIALS)
         }
         return result
     }

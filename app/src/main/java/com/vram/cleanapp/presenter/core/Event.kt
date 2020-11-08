@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.vram.cleanapp.view.core
+package com.vram.cleanapp.presenter.core
 
 import androidx.lifecycle.Observer
 

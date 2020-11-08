@@ -1,9 +1,9 @@
-package com.vram.cleanapp.view
+package com.vram.cleanapp.presenter
 
 import android.os.Bundle
 import com.vram.cleanapp.R
-import com.vram.cleanapp.view.core.BaseActivity
-import com.vram.cleanapp.view.core.BaseViewModel
+import com.vram.cleanapp.presenter.core.BaseActivity
+import com.vram.cleanapp.presenter.core.BaseViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 

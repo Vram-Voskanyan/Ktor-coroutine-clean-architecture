@@ -1,4 +1,4 @@
-package com.vram.cleanapp.data.service
+package com.vram.cleanapp.service
 
 import android.util.Patterns
 import java.util.regex.Pattern

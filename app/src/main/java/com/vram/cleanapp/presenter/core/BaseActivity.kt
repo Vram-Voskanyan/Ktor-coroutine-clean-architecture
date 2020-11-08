@@ -1,4 +1,4 @@
-package com.vram.cleanapp.view.core
+package com.vram.cleanapp.presenter.core
 
 import android.content.Context
 import android.os.Bundle

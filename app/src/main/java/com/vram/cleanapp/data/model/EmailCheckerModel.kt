@@ -1,4 +1,4 @@
-package com.vram.cleanapp.data.service.network.model
+package com.vram.cleanapp.data.model
 
 import kotlinx.serialization.Serializable
 

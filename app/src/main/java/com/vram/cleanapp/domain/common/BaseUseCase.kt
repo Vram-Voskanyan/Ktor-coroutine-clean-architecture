@@ -2,6 +2,7 @@ package com.vram.cleanapp.domain.common
 
 import com.vram.cleanapp.domain.common.data.Action
 import com.vram.cleanapp.domain.common.data.BaseException
+import com.vram.cleanapp.domain.common.data.SAFE_CALL_FAIL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 
@@ -15,7 +16,7 @@ open class BaseUseCase {
     } catch (baseException: BaseException) {
         Action.Error(baseException, baseException.extraErrorCode)
     } catch (ex: Exception) {
-        Action.Error(ex, -1)
+        Action.Error(ex, SAFE_CALL_FAIL)
     }
 
 }

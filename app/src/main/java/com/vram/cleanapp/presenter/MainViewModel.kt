@@ -1,4 +1,4 @@
-package com.vram.cleanapp.view
+package com.vram.cleanapp.presenter
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,9 +8,9 @@ import com.vram.cleanapp.domain.common.data.Action
 import com.vram.cleanapp.domain.common.data.UNAUTHORIZED
 import com.vram.cleanapp.domain.entity.UserToken
 import com.vram.cleanapp.domain.usecase.UserUseCase
-import com.vram.cleanapp.view.core.BaseViewModel
-import com.vram.cleanapp.view.core.Event
-import com.vram.cleanapp.view.core.runOnBackground
+import com.vram.cleanapp.presenter.core.BaseViewModel
+import com.vram.cleanapp.presenter.core.Event
+import com.vram.cleanapp.presenter.core.runOnBackground
 
 class MainViewModel(
     private val loginUseCase: LoginUseCase,
@@ -49,8 +49,7 @@ class MainViewModel(
         userUseCase.userDetails()
     }
 
-    // TODO: Mutable...
-    override fun getErrorActionsMap(): MutableMap<Int, () -> Unit> = mutableMapOf(
+    override fun getErrorActionsMap(): Map<Int, () -> Unit> = mapOf(
         EMPTY_USERNAME.id to { showError("Email can't be empty") },
         EMPTY_PASSWORD.id to { showError("Password can't be empty") },
         INVALID_USERNAME.id to { showError("Email is invalid") },

@@ -1,4 +1,4 @@
-package com.vram.cleanapp.data.service.network.model
+package com.vram.cleanapp.data.model
 
 import com.vram.cleanapp.domain.entity.UserToken
 import kotlinx.serialization.Serializable

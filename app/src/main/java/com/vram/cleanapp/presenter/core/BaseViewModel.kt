@@ -1,4 +1,4 @@
-package com.vram.cleanapp.view.core
+package com.vram.cleanapp.presenter.core
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,10 +9,10 @@ abstract class BaseViewModel : ViewModel() {
 
     private val loginErrorsMap: Map<Int, () -> Unit> by lazy { initErrorMap() }
 
-    abstract fun getErrorActionsMap(): MutableMap<Int, () -> Unit>
+    abstract fun getErrorActionsMap(): Map<Int, () -> Unit>
 
     private fun initErrorMap(): Map<Int, () -> Unit> =
-        getErrorActionsMap().apply {
+        getErrorActionsMap().toMutableMap().apply {
             putIfAbsent(BAD_REQUEST) { showError("Client side issue") }
             putIfAbsent(INTERNAL_SERVER_ERROR) { showError("Server issue") }
             putIfAbsent(NO_INTERNET) { showError("Please check Network connection") }

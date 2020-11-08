@@ -1,4 +1,4 @@
-package com.vram.cleanapp.view.core
+package com.vram.cleanapp.presenter.core
 
 import android.app.Activity
 import android.view.ViewGroup

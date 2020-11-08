@@ -1,4 +1,4 @@
-package com.vram.cleanapp.view.core
+package com.vram.cleanapp.presenter.core
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

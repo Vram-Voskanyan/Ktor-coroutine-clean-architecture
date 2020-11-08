@@ -1,7 +1,7 @@
 package com.vram.cleanapp.data.repo
 
-import com.vram.cleanapp.data.service.isValidEmail
-import com.vram.cleanapp.data.service.isValidPassword
+import com.vram.cleanapp.service.isValidEmail
+import com.vram.cleanapp.service.isValidPassword
 import com.vram.cleanapp.domain.repo.ValidationRepo
 
 class ValidationRepoImpl : ValidationRepo {
