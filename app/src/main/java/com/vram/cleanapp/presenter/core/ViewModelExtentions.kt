@@ -12,12 +12,12 @@ import kotlinx.coroutines.launch
 // 2. set dispatchers: Dispatchers.setMain(testDispatcher)
 // 3. For more info: Ask me, or just -> http://letmegooglethat.com/?q=unit+test+coroutines+android
 // We wrap it in case of easy migration into custom Dispatchers, like Threads count increase needs.
-fun ViewModel.runOnBackground(block: suspend () -> Unit): Job =
+fun BaseViewModel.runOnBackground(block: suspend () -> Unit): Job =
     viewModelScope.launch(Dispatchers.Default) {
         block()
     }
 
-fun ViewModel.runOnIO(block: suspend () -> Unit): Job =
+fun BaseViewModel.runOnIO(block: suspend () -> Unit): Job =
     viewModelScope.launch(Dispatchers.IO) {
         block()
     }

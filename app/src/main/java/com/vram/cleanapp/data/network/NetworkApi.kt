@@ -1,6 +1,7 @@
 package com.vram.cleanapp.data.network
 
 import com.vram.cleanapp.data.model.EmailCheckerModel
+import com.vram.cleanapp.data.model.UserNotesModel
 import com.vram.cleanapp.data.model.UserTokenModel
 
 // All network related interface.
@@ -14,5 +15,5 @@ interface NetworkApi {
     suspend fun isEmailExist(email: String): EmailCheckerModel
     suspend fun login(email: String, password: String): UserTokenModel
     suspend fun userInfo()
-    suspend fun userList()
+    suspend fun userNotes(): UserNotesModel
 }

@@ -42,7 +42,7 @@ class Application : Application() {
         // Service
         single<SerializationWrapper> { KXSerializationImpl() }
         single<NetworkApi> { initRestClient(get()) }
-        single<SharedPrefs> { SharedPrefsImpl(applicationContext) }
+        single<SharedPrefs> { SharedPrefsImpl(applicationContext, get()) }
 
         // Repo
         single<LoginRepo> { LoginRepoImpl(get()) }

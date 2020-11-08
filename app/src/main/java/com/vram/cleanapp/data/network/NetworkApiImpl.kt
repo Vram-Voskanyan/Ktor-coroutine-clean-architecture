@@ -6,6 +6,7 @@ import com.vram.cleanapp.GET_USER_TOKEN_URL
 import com.vram.cleanapp.INVALID_CREDENTIALS
 import com.vram.cleanapp.data.model.EmailCheckerModel
 import com.vram.cleanapp.data.model.UserTokenModel
+import com.vram.cleanapp.domain.common.data.todoCrash
 import com.vram.cleanapp.service.network.KtorClient
 import kotlinx.serialization.InternalSerializationApi
 
@@ -41,11 +42,9 @@ class NetworkApiImpl(private val ktorClient: KtorClient) : NetworkApi {
     }
 
     override suspend fun userInfo() {
-        TODO("Not yet implemented")
+        todoCrash()
     }
 
-    override suspend fun userList() {
-        TODO("Not yet implemented")
-    }
+    override suspend fun userNotes() = todoCrash()
 
 }

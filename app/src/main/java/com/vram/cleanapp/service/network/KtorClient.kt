@@ -62,7 +62,7 @@ class KtorClient(private val baseUrl: String, private val serializationWrapper: 
             HttpStatusCode.BadRequest -> throw BadRequest()
             HttpStatusCode.Unauthorized -> throw Unauthorized()
             HttpStatusCode.InternalServerError -> throw InternalServerError()
-            else -> throw Unknown()
+            else -> throw UnknownNetworkException()
         }
     }
 

@@ -6,6 +6,7 @@ import com.vram.cleanapp.domain.usecase.LoginUseCase
 import com.vram.cleanapp.domain.entity.LoginErrorTypes.*
 import com.vram.cleanapp.domain.common.data.Action
 import com.vram.cleanapp.domain.common.data.UNAUTHORIZED
+import com.vram.cleanapp.domain.common.data.todoCrash
 import com.vram.cleanapp.domain.entity.UserToken
 import com.vram.cleanapp.domain.usecase.UserUseCase
 import com.vram.cleanapp.presenter.core.BaseViewModel
@@ -42,7 +43,11 @@ class MainViewModel(
 
     // Do we have coroutine leaks here? caller also is on Background
     private fun requestUserNotes() = runOnBackground {
-        userUseCase.userNotes()
+        // TODO move error handle into base class: BaseVM... or mb, Action extension function
+        when (val response = userUseCase.userNotes()) {
+            is Action.Success -> todoCrash()
+            is Action.Error -> handleError(response.extraErrorCode)
+        }
     }
 
     private fun requestUserDetails() = runOnBackground {

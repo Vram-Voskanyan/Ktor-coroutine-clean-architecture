@@ -17,4 +17,19 @@ class BadRequest : BaseException(BAD_REQUEST)
 class Unauthorized : BaseException(UNAUTHORIZED)
 class InternalServerError : BaseException(INTERNAL_SERVER_ERROR)
 class NoInternet : BaseException(NO_INTERNET)
-class Unknown : BaseException(NETWORK_CALL_FAIL)
+class UnknownNetworkException : BaseException(NETWORK_CALL_FAIL)
+
+// File IO
+const val ON_SUCH_ELEMENT: Int = 3
+const val UNKNOWN_IO_EXCEPTION: Int = 4
+
+class NoSuchElement : BaseException(ON_SUCH_ELEMENT)
+class UnknownIOException: BaseException(UNKNOWN_IO_EXCEPTION)
+
+// handle not implemented exceptions.
+// no need of live code. just for test project
+const val TODO_EXCEPTION = 0
+
+class VRTODO : BaseException(TODO_EXCEPTION)
+
+fun todoCrash(): Nothing = throw VRTODO()
