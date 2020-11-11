@@ -5,4 +5,5 @@
     <string name="login">LOGIN</string>
     <string name="error">Error</string>
     <string name="email">Email</string>
+    <string name="reset">Reset All</string>
 </resources>

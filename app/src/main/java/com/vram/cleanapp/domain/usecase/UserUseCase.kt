@@ -1,15 +1,14 @@
 package com.vram.cleanapp.domain.usecase
 
 import com.vram.cleanapp.domain.common.BaseUseCase
-import com.vram.cleanapp.domain.common.data.Action
-import com.vram.cleanapp.domain.common.data.ON_SUCH_ELEMENT
-import com.vram.cleanapp.domain.common.data.UnknownIOException
-import com.vram.cleanapp.domain.common.data.todoCrash
+import com.vram.cleanapp.domain.common.data.*
+import com.vram.cleanapp.domain.common.onIOLaunch
 import com.vram.cleanapp.domain.entity.UserNotes
 import com.vram.cleanapp.domain.repo.UserRepo
 
 interface UserUseCase {
     suspend fun userDetails()
+    suspend fun removeNotesFromCache()
     suspend fun userNotes(): Action<UserNotes>
 }
 
@@ -24,11 +23,19 @@ class UserUseCaseImpl(
     override suspend fun userNotes() = safeCall {
         // check if user notes exist in cache.
         val cacheNotes: UserNotes? = notesFromCache()
-        if (cacheNotes != null) return@safeCall cacheNotes
-        val serverNotes: UserNotes = userRepo.userNotesFromNetwork()
-        todoCrash()
+        if (cacheNotes != null) {
+            return@safeCall cacheNotes
+        }
         // get from network
-        // save to cache.
+        val serverNotes: UserNotes = userRepo.userNotesFromNetwork()
+        // save into cache
+        onIOLaunch { userRepo.saveNotes(serverNotes) }
+
+        serverNotes
+    }
+
+    override suspend fun removeNotesFromCache() {
+        safeCall { onIOLaunch { userRepo.removeNotes() } }
     }
 
     private suspend fun notesFromCache(): UserNotes? =

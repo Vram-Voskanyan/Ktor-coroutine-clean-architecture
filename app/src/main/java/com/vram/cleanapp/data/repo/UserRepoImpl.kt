@@ -9,6 +9,7 @@ import com.vram.cleanapp.domain.entity.UserNotes
 import com.vram.cleanapp.domain.repo.UserRepo
 import com.vram.cleanapp.service.cache.SharedPrefs
 import com.vram.cleanapp.service.cache.retrieveJsonAsObject
+import com.vram.cleanapp.service.cache.saveObjectAsJson
 import kotlinx.serialization.InternalSerializationApi
 
 @InternalSerializationApi
@@ -26,8 +27,16 @@ class UserRepoImpl(
     }
 
     override suspend fun userNotesFromCache(): UserNotes {
-        val userNotes = sharedPrefs.retrieveJsonAsObject<UserNotesModel>("user_notes")
+        val userNotes = sharedPrefs.retrieveJsonAsObject<UserNotesModel>("user_notes") // TODO move user_notes key...
         return userNotes.toUserNotesEntity()
+    }
+
+    override suspend fun saveNotes(userNotes: UserNotes) {
+        sharedPrefs.saveObjectAsJson("user_notes", UserNotesModel(userNotes)) // UserNotesModel
+    }
+
+    override suspend fun removeNotes() {
+        sharedPrefs.remove("user_notes")
     }
 
     override suspend fun userDetailsFromNetwork() {

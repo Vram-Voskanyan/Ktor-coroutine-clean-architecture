@@ -32,5 +32,8 @@ class MainActivity : BaseActivity() {
         bLogin.setOnClickListener {
             viewModel.login(etEmail.text.toString(), etPassword.text.toString())
         }
+        bResetData.setOnClickListener {
+            viewModel.resetAll()
+        }
     }
 }

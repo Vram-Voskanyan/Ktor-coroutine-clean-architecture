@@ -52,4 +52,14 @@ abstract class BaseViewModel : ViewModel() {
         loginErrorsMap[errorId]?.invoke() ?: showError("Unknown error: $errorId")
     }
 
+    // TODO: move to action... combine to calls.
+    fun <T> Action<T>.resultDefaultHandle(successBlock: (T) -> Unit) {
+        // start loading? I prefer to handle it on each call.
+        when (this) {
+            is Action.Success -> successBlock(data)
+            is Action.Error -> handleError(extraErrorCode)
+        }
+        // end loading?
+    }
+
 }

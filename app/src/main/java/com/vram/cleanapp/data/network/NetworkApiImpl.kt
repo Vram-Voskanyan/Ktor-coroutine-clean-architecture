@@ -1,10 +1,8 @@
 package com.vram.cleanapp.data.network
 
-import com.vram.cleanapp.EMAIL_EXIST_URL
-import com.vram.cleanapp.EMAIL_NOT_EXIST_URL
-import com.vram.cleanapp.GET_USER_TOKEN_URL
-import com.vram.cleanapp.INVALID_CREDENTIALS
+import com.vram.cleanapp.*
 import com.vram.cleanapp.data.model.EmailCheckerModel
+import com.vram.cleanapp.data.model.UserNotesModel
 import com.vram.cleanapp.data.model.UserTokenModel
 import com.vram.cleanapp.domain.common.data.todoCrash
 import com.vram.cleanapp.service.network.KtorClient
@@ -44,7 +42,7 @@ class NetworkApiImpl(private val ktorClient: KtorClient) : NetworkApi {
     override suspend fun userInfo() {
         todoCrash()
     }
-
-    override suspend fun userNotes() = todoCrash()
+    // TODO: add also `post` request simple?
+    override suspend fun userNotes() = ktorClient.get<UserNotesModel>(GET_USER_NOTES_URL)
 
 }

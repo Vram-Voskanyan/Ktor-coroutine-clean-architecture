@@ -26,6 +26,10 @@ class KtorClient(private val baseUrl: String, private val serializationWrapper: 
         client.get { url { path(urlPath) } }
     }
 
+    suspend inline fun <reified R : Any> post(urlPath: String, bodyData: Any): R = call {
+        client.post { url { path(urlPath) }; body = bodyData }
+    }
+
     // we add new header for `ALL` calls
     fun addDefaultHeader(key: String, value: String) {
         defaultHeaders[key] = value

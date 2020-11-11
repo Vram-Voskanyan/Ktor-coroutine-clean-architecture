@@ -1,9 +1,26 @@
 package com.vram.cleanapp.data.model
 
+import com.vram.cleanapp.domain.entity.Notes
 import com.vram.cleanapp.domain.entity.UserNotes
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserNotesModel(val id: String, val title: String, val description: String)
+class UserNotesModel(val notes: List<NotesModel>) {
+    constructor(userNotes: UserNotes) : this(userNotes.notes.map {
+        NotesModel(
+            it.id,
+            it.title,
+            it.description,
+            it.date
+        )
+    })
+}
 
-fun UserNotesModel.toUserNotesEntity() = UserNotes(id, title, description)
+@Serializable
+class NotesModel(val id: String, val title: String, val description: String, val date: String)
+
+fun UserNotesModel.toUserNotesEntity() = UserNotes(
+    notes.map {
+        Notes(it.id, it.title, it.description, it.date)
+    }
+)

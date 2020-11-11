@@ -4,9 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.vram.cleanapp.domain.usecase.LoginUseCase
 import com.vram.cleanapp.domain.entity.LoginErrorTypes.*
-import com.vram.cleanapp.domain.common.data.Action
+import com.vram.cleanapp.domain.common.data.TODO_EXCEPTION
 import com.vram.cleanapp.domain.common.data.UNAUTHORIZED
-import com.vram.cleanapp.domain.common.data.todoCrash
 import com.vram.cleanapp.domain.entity.UserToken
 import com.vram.cleanapp.domain.usecase.UserUseCase
 import com.vram.cleanapp.presenter.core.BaseViewModel
@@ -28,11 +27,15 @@ class MainViewModel(
 
     fun login(email: String?, password: String?) = runOnBackground {
         startLoading()
-        when (val response = loginUseCase.login(email, password)) {
-            is Action.Success -> onLoginSuccess(response.data)
-            is Action.Error -> handleError(response.extraErrorCode)
+        loginUseCase.login(email, password).resultDefaultHandle {
+            onLoginSuccess(it)
         }
         dataReceived()
+    }
+
+    fun resetAll() = runOnBackground {
+        userUseCase.removeNotesFromCache()
+        // todo token -> need to have fully function for reset.
     }
 
     private fun onLoginSuccess(userToken: UserToken) {
@@ -43,10 +46,8 @@ class MainViewModel(
 
     // Do we have coroutine leaks here? caller also is on Background
     private fun requestUserNotes() = runOnBackground {
-        // TODO move error handle into base class: BaseVM... or mb, Action extension function
-        when (val response = userUseCase.userNotes()) {
-            is Action.Success -> todoCrash()
-            is Action.Error -> handleError(response.extraErrorCode)
+        userUseCase.userNotes().resultDefaultHandle {
+            handleError(TODO_EXCEPTION)
         }
     }
 

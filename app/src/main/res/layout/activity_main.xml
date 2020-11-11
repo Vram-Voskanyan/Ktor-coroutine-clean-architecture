@@ -43,6 +43,14 @@
             app:layout_constraintStart_toStartOf="@+id/etPassword"
             app:layout_constraintTop_toBottomOf="@+id/etPassword" />
 
+        <Button
+            android:id="@+id/bResetData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reset"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/etEmail"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
