@@ -22,15 +22,11 @@ class UserUseCaseImpl(
 
     override suspend fun userNotes() = safeCall {
         // check if user notes exist in cache.
-        val cacheNotes: UserNotes? = notesFromCache()
-        if (cacheNotes != null) {
-            return@safeCall cacheNotes
-        }
+        notesFromCache()?.let { return@safeCall it }
         // get from network
         val serverNotes: UserNotes = userRepo.userNotesFromNetwork()
         // save into cache
         onIOLaunch { userRepo.saveNotes(serverNotes) }
-
         serverNotes
     }
 

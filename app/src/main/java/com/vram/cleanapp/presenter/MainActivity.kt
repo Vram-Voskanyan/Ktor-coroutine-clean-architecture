@@ -1,6 +1,7 @@
 package com.vram.cleanapp.presenter
 
 import android.os.Bundle
+import android.view.View
 import com.vram.cleanapp.R
 import com.vram.cleanapp.presenter.core.BaseActivity
 import com.vram.cleanapp.presenter.core.BaseViewModel
@@ -26,6 +27,15 @@ class MainActivity : BaseActivity() {
         viewModel.onPasswordError.observe(this, {
             etPassword.error = "Psss~~\nChange it with: 1111"
         })
+        viewModel.userNotesLoadingShow.observe(this, {
+            pbUserNotesLoading.visibility = View.VISIBLE
+        })
+        viewModel.userNotesLoadingHide.observe(this, {
+            pbUserNotesLoading.visibility = View.INVISIBLE
+        })
+        viewModel.userNotes.observe(this, {
+            tvUserNotes.text = it.toString()
+        })
     }
 
     private fun initViews() {
@@ -33,7 +43,13 @@ class MainActivity : BaseActivity() {
             viewModel.login(etEmail.text.toString(), etPassword.text.toString())
         }
         bResetData.setOnClickListener {
-            viewModel.resetAll()
+            resetAll()
         }
+    }
+
+    private fun resetAll() {
+        viewModel.resetAll()
+        pbUserNotesLoading.visibility = View.INVISIBLE
+        tvUserNotes.text = ""
     }
 }

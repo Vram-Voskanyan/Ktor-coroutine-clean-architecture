@@ -6,6 +6,7 @@ import com.vram.cleanapp.domain.usecase.LoginUseCase
 import com.vram.cleanapp.domain.entity.LoginErrorTypes.*
 import com.vram.cleanapp.domain.common.data.TODO_EXCEPTION
 import com.vram.cleanapp.domain.common.data.UNAUTHORIZED
+import com.vram.cleanapp.domain.entity.UserNotes
 import com.vram.cleanapp.domain.entity.UserToken
 import com.vram.cleanapp.domain.usecase.UserUseCase
 import com.vram.cleanapp.presenter.core.BaseViewModel
@@ -19,11 +20,20 @@ class MainViewModel(
 
     // TODO: profile LiveData
     // TODO: User Notes LiveData
-    private val _onEmailError: MutableLiveData<Event<Any>> = MutableLiveData()
-    val onEmailError: LiveData<Event<Any>> = _onEmailError
+    private val _onEmailError: MutableLiveData<Event<Any>> by lazy { MutableLiveData() }
+    val onEmailError: LiveData<Event<Any>> by lazy { _onEmailError }
 
-    private val _onPasswordError: MutableLiveData<Event<Any>> = MutableLiveData()
-    val onPasswordError: LiveData<Event<Any>> = _onPasswordError
+    private val _userNotes: MutableLiveData<UserNotes> = MutableLiveData()
+    val userNotes: LiveData<UserNotes> = _userNotes
+
+    private val _userNotesLoadingShow: MutableLiveData<Event<Any>> by lazy { MutableLiveData() }
+    val userNotesLoadingShow: LiveData<Event<Any>> by lazy { _userNotesLoadingShow }
+
+    private val _userNotesLoadingHide: MutableLiveData<Event<Any>> by lazy { MutableLiveData() }
+    val userNotesLoadingHide: LiveData<Event<Any>> by lazy { _userNotesLoadingHide }
+
+    private val _onPasswordError: MutableLiveData<Event<Any>> by lazy { MutableLiveData() }
+    val onPasswordError: LiveData<Event<Any>> by lazy { _onPasswordError }
 
     fun login(email: String?, password: String?) = runOnBackground {
         startLoading()
@@ -35,7 +45,6 @@ class MainViewModel(
 
     fun resetAll() = runOnBackground {
         userUseCase.removeNotesFromCache()
-        // todo token -> need to have fully function for reset.
     }
 
     private fun onLoginSuccess(userToken: UserToken) {
@@ -46,9 +55,11 @@ class MainViewModel(
 
     // Do we have coroutine leaks here? caller also is on Background
     private fun requestUserNotes() = runOnBackground {
+        _userNotesLoadingShow.postValue(Event(Any()))
         userUseCase.userNotes().resultDefaultHandle {
-            handleError(TODO_EXCEPTION)
+            _userNotes.postValue(it)
         }
+        _userNotesLoadingHide.postValue(Event(Any()))
     }
 
     private fun requestUserDetails() = runOnBackground {
@@ -61,7 +72,7 @@ class MainViewModel(
         INVALID_USERNAME.id to { showError("Email is invalid") },
         INVALID_PASSWORD.id to { showError("Password is invalid") },
         NO_SUCH_USERNAME.id to ::noSuchUser,
-        // this is overrides base.
+        // this overrides base.
         UNAUTHORIZED to ::showInvalidPassword
     )
 

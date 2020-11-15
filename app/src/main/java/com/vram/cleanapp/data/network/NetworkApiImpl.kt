@@ -6,6 +6,7 @@ import com.vram.cleanapp.data.model.UserNotesModel
 import com.vram.cleanapp.data.model.UserTokenModel
 import com.vram.cleanapp.domain.common.data.todoCrash
 import com.vram.cleanapp.service.network.KtorClient
+import kotlinx.coroutines.delay
 import kotlinx.serialization.InternalSerializationApi
 
 @InternalSerializationApi
@@ -42,7 +43,13 @@ class NetworkApiImpl(private val ktorClient: KtorClient) : NetworkApi {
     override suspend fun userInfo() {
         todoCrash()
     }
+
     // TODO: add also `post` request simple?
-    override suspend fun userNotes() = ktorClient.get<UserNotesModel>(GET_USER_NOTES_URL)
+    override suspend fun userNotes(): UserNotesModel {
+        // THIS IS CALL IMITATION
+        // Imitation of long call.
+        delay(5000)
+        return ktorClient.get(GET_USER_NOTES_URL)
+    }
 
 }
