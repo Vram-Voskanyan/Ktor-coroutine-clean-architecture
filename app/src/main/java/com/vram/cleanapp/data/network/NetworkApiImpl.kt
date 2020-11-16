@@ -2,12 +2,13 @@ package com.vram.cleanapp.data.network
 
 import com.vram.cleanapp.*
 import com.vram.cleanapp.data.model.EmailCheckerModel
+import com.vram.cleanapp.data.model.UserInfoModel
 import com.vram.cleanapp.data.model.UserNotesModel
 import com.vram.cleanapp.data.model.UserTokenModel
-import com.vram.cleanapp.domain.common.data.todoCrash
 import com.vram.cleanapp.service.network.KtorClient
 import kotlinx.coroutines.delay
 import kotlinx.serialization.InternalSerializationApi
+import kotlin.random.Random
 
 @InternalSerializationApi
 class NetworkApiImpl(private val ktorClient: KtorClient) : NetworkApi {
@@ -40,15 +41,18 @@ class NetworkApiImpl(private val ktorClient: KtorClient) : NetworkApi {
         return result
     }
 
-    override suspend fun userInfo() {
-        todoCrash()
+    override suspend fun userInfo(): UserInfoModel {
+        // THIS IS CALL IMITATION
+        // Imitation of long call. w8 from 2 to 7 sec.
+        delay(Random.nextLong(2000, 7000))
+        return ktorClient.get(GET_USER_INFO_URL)
     }
 
     // TODO: add also `post` request simple?
     override suspend fun userNotes(): UserNotesModel {
         // THIS IS CALL IMITATION
         // Imitation of long call.
-        delay(5000)
+        delay(Random.nextLong(1000, 5000))
         return ktorClient.get(GET_USER_NOTES_URL)
     }
 

@@ -2,16 +2,15 @@ package com.vram.cleanapp.presenter
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.vram.cleanapp.domain.usecase.LoginUseCase
-import com.vram.cleanapp.domain.entity.LoginErrorTypes.*
-import com.vram.cleanapp.domain.common.data.TODO_EXCEPTION
 import com.vram.cleanapp.domain.common.data.UNAUTHORIZED
-import com.vram.cleanapp.domain.entity.UserNotes
+import com.vram.cleanapp.domain.entity.LoginErrorTypes.*
 import com.vram.cleanapp.domain.entity.UserToken
+import com.vram.cleanapp.domain.usecase.LoginUseCase
 import com.vram.cleanapp.domain.usecase.UserUseCase
 import com.vram.cleanapp.presenter.core.BaseViewModel
 import com.vram.cleanapp.presenter.core.Event
 import com.vram.cleanapp.presenter.core.runOnBackground
+import com.vram.cleanapp.presenter.model.toViewData
 
 class MainViewModel(
     private val loginUseCase: LoginUseCase,
@@ -23,14 +22,23 @@ class MainViewModel(
     private val _onEmailError: MutableLiveData<Event<Any>> by lazy { MutableLiveData() }
     val onEmailError: LiveData<Event<Any>> by lazy { _onEmailError }
 
-    private val _userNotes: MutableLiveData<UserNotes> = MutableLiveData()
-    val userNotes: LiveData<UserNotes> = _userNotes
+    private val _userNotes: MutableLiveData<String> = MutableLiveData()
+    val userNotes: LiveData<String> = _userNotes
+
+    private val _userInfo: MutableLiveData<String> = MutableLiveData()
+    val userInfo: LiveData<String> = _userInfo
 
     private val _userNotesLoadingShow: MutableLiveData<Event<Any>> by lazy { MutableLiveData() }
     val userNotesLoadingShow: LiveData<Event<Any>> by lazy { _userNotesLoadingShow }
 
     private val _userNotesLoadingHide: MutableLiveData<Event<Any>> by lazy { MutableLiveData() }
     val userNotesLoadingHide: LiveData<Event<Any>> by lazy { _userNotesLoadingHide }
+
+    private val _userInfoLoadingShow: MutableLiveData<Event<Any>> by lazy { MutableLiveData() }
+    val userInfoLoadingShow: LiveData<Event<Any>> by lazy { _userInfoLoadingShow }
+
+    private val _userInfoLoadingHide: MutableLiveData<Event<Any>> by lazy { MutableLiveData() }
+    val userInfoLoadingHide: LiveData<Event<Any>> by lazy { _userInfoLoadingHide }
 
     private val _onPasswordError: MutableLiveData<Event<Any>> by lazy { MutableLiveData() }
     val onPasswordError: LiveData<Event<Any>> by lazy { _onPasswordError }
@@ -57,13 +65,18 @@ class MainViewModel(
     private fun requestUserNotes() = runOnBackground {
         _userNotesLoadingShow.postValue(Event(Any()))
         userUseCase.userNotes().resultDefaultHandle {
-            _userNotes.postValue(it)
+            _userNotes.postValue(it.toViewData())
         }
         _userNotesLoadingHide.postValue(Event(Any()))
     }
 
     private fun requestUserDetails() = runOnBackground {
-        userUseCase.userDetails()
+        _userInfoLoadingShow.postValue(Event(Any()))
+        userUseCase.userDetails().resultDefaultHandle {
+            _userInfo.postValue(it.toViewData())
+        }
+        _userInfoLoadingHide.postValue(Event(Any()))
+
     }
 
     override fun getErrorActionsMap(): Map<Int, () -> Unit> = mapOf(

@@ -13,7 +13,7 @@ interface SerializationWrapper {
 
 class KXSerializationImpl : SerializationWrapper {
     override fun <T : Any> stringToObject(serializer: KSerializer<T>, json: String) =
-        Json { ignoreUnknownKeys = true }.decodeFromString(serializer, json)
+        Json { ignoreUnknownKeys = true; isLenient = true }.decodeFromString(serializer, json)
 
     override fun <T : Any> objectToString(serializer: KSerializer<T>, json: T): String =
         Json.encodeToString(serializer, json)
@@ -21,7 +21,7 @@ class KXSerializationImpl : SerializationWrapper {
 
 @InternalSerializationApi
 inline fun <reified R : Any> SerializationWrapper.stringToObject(json: String) =
-    Json { ignoreUnknownKeys = true }.decodeFromString(R::class.serializer(), json)
+    Json { ignoreUnknownKeys = true; isLenient = true }.decodeFromString(R::class.serializer(), json)
 
 @InternalSerializationApi
 inline fun <reified R : Any> SerializationWrapper.objectToString(json: R) =

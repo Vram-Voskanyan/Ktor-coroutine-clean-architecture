@@ -34,7 +34,16 @@ class MainActivity : BaseActivity() {
             pbUserNotesLoading.visibility = View.INVISIBLE
         })
         viewModel.userNotes.observe(this, {
-            tvUserNotes.text = it.toString()
+            tvUserNotes.text = it
+        })
+        viewModel.userInfoLoadingShow.observe(this, {
+            pbUserInfoLoading.visibility = View.VISIBLE
+        })
+        viewModel.userInfoLoadingHide.observe(this, {
+            pbUserInfoLoading.visibility = View.INVISIBLE
+        })
+        viewModel.userInfo.observe(this, {
+            tvUserInfo.text = it
         })
     }
 
@@ -51,5 +60,6 @@ class MainActivity : BaseActivity() {
         viewModel.resetAll()
         pbUserNotesLoading.visibility = View.INVISIBLE
         tvUserNotes.text = ""
+        tvUserInfo.text = ""
     }
 }
