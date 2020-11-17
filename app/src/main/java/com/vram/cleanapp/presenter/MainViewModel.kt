@@ -17,16 +17,14 @@ class MainViewModel(
     private val userUseCase: UserUseCase
 ) : BaseViewModel() {
 
-    // TODO: profile LiveData
-    // TODO: User Notes LiveData
     private val _onEmailError: MutableLiveData<Event<Any>> by lazy { MutableLiveData() }
     val onEmailError: LiveData<Event<Any>> by lazy { _onEmailError }
 
-    private val _userNotes: MutableLiveData<String> = MutableLiveData()
-    val userNotes: LiveData<String> = _userNotes
+    private val _userNotes: MutableLiveData<String> by lazy { MutableLiveData() }
+    val userNotes: LiveData<String> by lazy { _userNotes }
 
-    private val _userInfo: MutableLiveData<String> = MutableLiveData()
-    val userInfo: LiveData<String> = _userInfo
+    private val _userInfo: MutableLiveData<String> by lazy { MutableLiveData() }
+    val userInfo: LiveData<String> by lazy { _userInfo }
 
     private val _userNotesLoadingShow: MutableLiveData<Event<Any>> by lazy { MutableLiveData() }
     val userNotesLoadingShow: LiveData<Event<Any>> by lazy { _userNotesLoadingShow }
@@ -80,7 +78,7 @@ class MainViewModel(
     }
 
     override fun getErrorActionsMap(): Map<Int, () -> Unit> = mapOf(
-        EMPTY_USERNAME.id to { showError("Email can't be empty") },
+        EMPTY_USERNAME.id to { showError("Email can't be empty") }, // TODO: move to string.xml
         EMPTY_PASSWORD.id to { showError("Password can't be empty") },
         INVALID_USERNAME.id to { showError("Email is invalid") },
         INVALID_PASSWORD.id to { showError("Password is invalid") },
