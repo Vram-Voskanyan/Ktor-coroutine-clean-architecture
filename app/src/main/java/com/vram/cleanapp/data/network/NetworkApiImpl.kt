@@ -48,12 +48,14 @@ class NetworkApiImpl(private val ktorClient: KtorClient) : NetworkApi {
         return ktorClient.get(GET_USER_INFO_URL)
     }
 
-    // TODO: add also `post` request simple?
     override suspend fun userNotes(): UserNotesModel {
         // THIS IS CALL IMITATION
         // Imitation of long call.
         delay(Random.nextLong(1000, 5000))
         return ktorClient.get(GET_USER_NOTES_URL)
     }
+
+    // SOON :] simple for post request.
+    // fun addNote() { return ktorClient.post() }
 
 }

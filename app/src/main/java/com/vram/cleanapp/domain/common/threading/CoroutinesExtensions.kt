@@ -1,4 +1,4 @@
-package com.vram.cleanapp.domain.common
+package com.vram.cleanapp.domain.common.threading
 
 import kotlinx.coroutines.*
 

@@ -4,14 +4,10 @@ import android.app.Application
 import com.vram.cleanapp.data.network.NetworkApi
 import com.vram.cleanapp.service.network.KtorClient
 import com.vram.cleanapp.data.network.NetworkApiImpl
-import com.vram.cleanapp.data.repo.LoginRepoImpl
-import com.vram.cleanapp.data.repo.UserRepoImpl
-import com.vram.cleanapp.data.repo.ValidationRepoImpl
+import com.vram.cleanapp.data.repo.*
+import com.vram.cleanapp.domain.repo.*
 import com.vram.cleanapp.domain.usecase.LoginUseCase
 import com.vram.cleanapp.domain.usecase.LoginUseCaseImpl
-import com.vram.cleanapp.domain.repo.LoginRepo
-import com.vram.cleanapp.domain.repo.UserRepo
-import com.vram.cleanapp.domain.repo.ValidationRepo
 import com.vram.cleanapp.domain.usecase.UserUseCase
 import com.vram.cleanapp.domain.usecase.UserUseCaseImpl
 import com.vram.cleanapp.presenter.MainViewModel
@@ -46,12 +42,14 @@ class Application : Application() {
 
         // Repo
         single<LoginRepo> { LoginRepoImpl(get()) }
-        single<UserRepo> { UserRepoImpl(get(), get()) }
+        single<UserRepo> { UserRepoImpl(get()) }
+        single<NotesRepo> { NotesRepoImpl(get(), get()) }
+        single<DateRepo> { DateRepoImpl() }
         single<ValidationRepo> { ValidationRepoImpl() }
 
         // UseCase
         single<LoginUseCase> { LoginUseCaseImpl(get(), get(), get()) }
-        single<UserUseCase> { UserUseCaseImpl(get()) }
+        single<UserUseCase> { UserUseCaseImpl(get(), get(), get()) }
 
         // ViewModel
         viewModel { MainViewModel(get(), get()) }
@@ -63,8 +61,8 @@ class Application : Application() {
         // have attention we have `path` on base url "/api"
         val ktorClient = KtorClient(BASE_URL, serializationWrapper)
         // init default headers
-        // we use Json for request & response
-        ktorClient.addDefaultHeader("Content-Type", "application/json")
+        // if we use json request response. add following header
+        // ktorClient.addDefaultHeader("Content-Type", "application/json")
         return NetworkApiImpl(ktorClient)
     }
 

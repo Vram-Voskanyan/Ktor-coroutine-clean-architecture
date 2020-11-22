@@ -3,16 +3,16 @@ package com.vram.cleanapp.domain.usecase
 import com.vram.cleanapp.domain.entity.LoginErrorTypes
 import com.vram.cleanapp.domain.entity.UserToken
 import com.vram.cleanapp.domain.repo.ValidationRepo
-import com.vram.cleanapp.domain.common.BaseUseCase
-import com.vram.cleanapp.domain.common.data.Action
-import com.vram.cleanapp.domain.common.onDefaultAsync
-import com.vram.cleanapp.domain.common.onIOAsync
+import com.vram.cleanapp.domain.common.usecase.BaseUseCase
+import com.vram.cleanapp.domain.common.data.Result
+import com.vram.cleanapp.domain.common.threading.onDefaultAsync
+import com.vram.cleanapp.domain.common.threading.onIOAsync
 import com.vram.cleanapp.domain.entity.toException
 import com.vram.cleanapp.domain.repo.LoginRepo
 import com.vram.cleanapp.domain.repo.UserRepo
 
 interface LoginUseCase {
-    suspend fun login(email: String?, password: String?): Action<UserToken>
+    suspend fun login(email: String?, password: String?): Result<UserToken>
 }
 
 class LoginUseCaseImpl(
@@ -21,7 +21,7 @@ class LoginUseCaseImpl(
     private val userRepo: UserRepo
 ) : LoginUseCase, BaseUseCase() {
 
-    override suspend fun login(email: String?, password: String?): Action<UserToken> = safeCall {
+    override suspend fun login(email: String?, password: String?): Result<UserToken> = safeCall {
         val nonNullUserName = onIOAsync { checkValidEmail(email) }
         val nonNullPassword = onDefaultAsync { validatePassword(password) }
         val loginResponse = loginRepo.login(nonNullUserName.await(), nonNullPassword.await())

@@ -5,7 +5,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 
-// TODO: :[ Not proper wrapped: KSerializer<T>
+// TODO: :[ ... Not proper wrapped: KSerializer<T>
 interface SerializationWrapper {
     fun <T : Any> stringToObject(serializer: KSerializer<T>, json: String): T
     fun <T : Any> objectToString(serializer: KSerializer<T>, json: T): String

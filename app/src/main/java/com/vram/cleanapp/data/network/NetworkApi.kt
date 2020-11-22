@@ -7,7 +7,8 @@ import com.vram.cleanapp.data.model.UserTokenModel
 
 // All network related interface.
 /**
- * TODO: do we need networkApi at all?
+ * encapsulation Network need for API-i reuse, like cross platform migration...
+ *
  * or just inject `ktorClient` into repo and call ktorClient.get<MODEL>(URL)
  **/
 interface NetworkApi {

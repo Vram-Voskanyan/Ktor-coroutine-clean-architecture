@@ -63,7 +63,9 @@ class MainViewModel(
     private fun requestUserNotes() = runOnBackground {
         _userNotesLoadingShow.postValue(Event(Any()))
         userUseCase.userNotes().resultDefaultHandle {
-            _userNotes.postValue(it.toViewData())
+            _userNotes.postValue(it.toViewData { timeStamp ->
+                userUseCase.userAgeToDate(timeStamp)
+            })
         }
         _userNotesLoadingHide.postValue(Event(Any()))
     }
